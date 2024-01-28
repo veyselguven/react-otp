@@ -35,7 +35,17 @@ function OtpInput({ length = 4, onOtpSubmit = () => {} }) {
     }
   };
   const handleClick = () => {};
-  const handleKeyDown = () => {};
+  const handleKeyDown = (index, e) => {
+    if (
+      e.key === "Backspace" &&
+      !otp[index] &&
+      index > 0 &&
+      inputRefs.current[index - 1]
+    ) {
+      //move focus to previous input field on backspace
+      inputRefs.current[index - 1].focus();
+    }
+  };
 
   return (
     <div>
