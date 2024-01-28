@@ -1,12 +1,33 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 function OtpInput({ length = 4, onOtpSubmit = () => {} }) {
   const [otp, setOtpt] = useState(new Array(length).fill(""));
 
-  console.log(otp);
+  const inputRefs = useRef([]);
 
-  const handleChange = () => {};
+  useEffect(() => {
+    if (inputRefs.current[0]) {
+      inputRefs.current[0].focus();
+    }
+  }, []);
+
+  //console.log(inputRefs);
+
+  const handleChange = (index, e) => {
+    const value = e.target.value;
+    if (isNaN(value)) return;
+
+    const newOtp = [...otp];
+    // allow only one inpit
+    newOtp[index] = value.substring(value.length - 1);
+    setOtpt(newOtp);
+    // Submit trigger
+
+    const combinedOtp = newOtp.join("");
+    // console.log(newOtp, combinedOtp);
+    if (combinedOtp.length === length) onOtpSubmit(combinedOtp);
+  };
   const handleClick = () => {};
   const handleKeyDown = () => {};
 
@@ -17,6 +38,7 @@ function OtpInput({ length = 4, onOtpSubmit = () => {} }) {
           <input
             key={index}
             type="text"
+            ref={(input) => (inputRefs.current[index] = input)}
             value={value}
             onChange={(e) => handleChange(index, e)}
             onClick={() => handleClick(index)}
